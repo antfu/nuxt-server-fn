@@ -1,0 +1,7 @@
+{
+  "extends": "./playground/.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "module": "esnext"
+  }
+}

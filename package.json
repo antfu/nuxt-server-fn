@@ -1,0 +1,56 @@
+{
+  "name": "nuxt-server-fn",
+  "type": "module",
+  "version": "0.0.0",
+  "packageManager": "pnpm@7.1.0",
+  "license": "MIT",
+  "homepage": "https://github.com/antfu/nuxt-server-fn#readme",
+  "bugs": {
+    "url": "https://github.com/antfu/nuxt-server-fn/issues"
+  },
+  "author": "Anthony Fu <anthonyfu117@hotmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antfu/nuxt-server-fn.git"
+  },
+  "funding": "https://github.com/sponsors/antfu",
+  "main": "./dist/module.cjs",
+  "types": "./dist/types.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/module.mjs",
+      "require": "./dist/module.cjs",
+      "types": "./dist/module.d.ts"
+    },
+    "./api": {
+      "import": "./dist/runtime/api.mjs",
+      "types": "./dist/runtime/api.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepack": "nuxt-module-build",
+    "build": "nuxt-module-build",
+    "play": "nuxi dev playground",
+    "lint": "eslint .",
+    "dev:build": "nuxi build playground",
+    "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground"
+  },
+  "dependencies": {
+    "@nuxt/kit": "^3.0.0-rc.3",
+    "fs-extra": "^10.1.0",
+    "h3": "^0.7.8",
+    "ohmyfetch": "^0.4.17",
+    "ufo": "^0.8.4"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.23.1",
+    "@nuxt/module-builder": "^0.1.7",
+    "@types/fs-extra": "^9.0.13",
+    "eslint": "^8.15.0",
+    "nuxt": "^3.0.0-rc.3",
+    "typescript": "^4.6.4"
+  }
+}
