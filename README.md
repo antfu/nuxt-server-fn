@@ -40,7 +40,7 @@ const serverFn = useServerFn()
 const msg = await serverFn.myFunction('Nuxt') // 'Hello Nuxt from server'
 ```
 
-By default the server functions are aggressively cached. Multiple calls to the same arguments will return the same result. To opt-out, pass `false` to `useServerFn`
+By default the server functions are **aggressively cached** using the [`useState()` hook](https://v3.nuxtjs.org/api/composables/use-state) under the hood. Multiple calls to the same arguments will reuse the same result across client and server sides. To opt-out, pass `false` to `useServerFn`
 
 ```ts
 const serverFn = useServerFn(false) // no cache
