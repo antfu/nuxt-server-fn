@@ -5,6 +5,17 @@ import { useState } from '#app'
 
 declare const $fetch: typeof import('ohmyfetch').$fetch
 
+export type ArgumentsType<T> = T extends (...args: infer A) => any ? A : never
+export type ReturnType<T> = T extends (...args: any) => infer R ? R : never
+
+export type Promisify<T> = ReturnType<T> extends Promise<any>
+  ? T
+  : (...args: ArgumentsType<T>) => Promise<Awaited<ReturnType<T>>>
+
+export type ClientRPC<T> = {
+  [K in keyof T]: T[K] extends (...args: any) => any ? Promisify<T[K]> : never
+}
+
 export function createServerFnClient<T>() {
   function withCache() {
     const _cache = useState('server-fn-cache', () => new Map<string, any>())
@@ -12,8 +23,8 @@ export function createServerFnClient<T>() {
 
     return new Proxy({}, {
       get(_, name) {
-        return (...args: any[]) => {
-          const hash = ohash([name, args])
+        return async (...args: any[]) => {
+          const hash = ohash({ name, args })
           if (_cache.value.has(hash))
             return _cache.value.get(hash)
 
@@ -38,13 +49,13 @@ export function createServerFnClient<T>() {
           return request
         }
       },
-    }) as T
+    }) as any
   }
 
   function noCache() {
     return new Proxy({}, {
       get(_, name) {
-        return (...args: any[]) => {
+        return async (...args: any[]) => {
           return $fetch(`/api/${ROUTE}`, {
             method: 'POST',
             body: {
@@ -54,7 +65,7 @@ export function createServerFnClient<T>() {
           })
         }
       },
-    }) as T
+    })
   }
 
   /**
@@ -62,7 +73,7 @@ export function createServerFnClient<T>() {
    *
    * @param cache - cache requests with same arguments (default true)
    */
-  function useServerFn(cache = true): T {
+  function useServerFn(cache = true): ClientRPC<T> {
     return cache ? withCache() : noCache()
   }
 
