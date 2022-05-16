@@ -5,6 +5,7 @@ importers:
   .:
     specifiers:
       '@antfu/eslint-config': ^0.23.1
+      '@antfu/ni': ^0.16.2
       '@nuxt/kit': ^3.0.0-rc.3
       '@nuxt/module-builder': ^0.1.7
       '@types/fs-extra': ^9.0.13
@@ -12,6 +13,8 @@ importers:
       fs-extra: ^10.1.0
       h3: ^0.7.8
       nuxt: ^3.0.0-rc.3
+      nuxt-server-fn: workspace:*
+      ohash: ^0.1.0
       ohmyfetch: ^0.4.17
       typescript: ^4.6.4
       ufo: ^0.8.4
@@ -19,14 +22,17 @@ importers:
       '@nuxt/kit': 3.0.0-rc.3
       fs-extra: 10.1.0
       h3: 0.7.8
+      ohash: 0.1.0
       ohmyfetch: 0.4.17
       ufo: 0.8.4
     devDependencies:
       '@antfu/eslint-config': 0.23.1_hcfsmds2fshutdssjqluwm76uu
+      '@antfu/ni': 0.16.2
       '@nuxt/module-builder': 0.1.7
       '@types/fs-extra': 9.0.13
       eslint: 8.15.0
       nuxt: 3.0.0-rc.3
+      nuxt-server-fn: 'link:'
       typescript: 4.6.4
 
   playground:
@@ -140,6 +146,11 @@ packages:
       - eslint-import-resolver-webpack
       - supports-color
       - typescript
+    dev: true
+
+  /@antfu/ni/0.16.2:
+    resolution: {integrity: sha512-HZH4I07EYKU4KZLtUYm/zEmaDIhaq51H/qu45uH1AcUPWqMGbB7evE/TnSr0SGInEA+oQs4Is5Vn/PmQhfuU5w==}
+    hasBin: true
     dev: true
 
   /@babel/code-frame/7.16.7:
@@ -4570,7 +4581,6 @@ packages:
 
   /ohash/0.1.0:
     resolution: {integrity: sha512-KvclyhWseX6F2UTEEp9Qzybb0LTGorTSVufAToV5tR2B6Q64rVhKhkcU/o+mBaiqGa5+PdobtfSVelp8VOCR6A==}
-    dev: true
 
   /ohmyfetch/0.4.17:
     resolution: {integrity: sha512-jUpCDJIDlTZdS4PE3veoHIXoUSm2NRJfFMIROd29/qeOsbJEoEYBzJ6re+W1hskc44ej11IL//scfhckIcCN8Q==}

@@ -25,32 +25,39 @@
     "./api": {
       "import": "./dist/runtime/api.mjs",
       "types": "./dist/runtime/api.d.ts"
+    },
+    "./client": {
+      "import": "./dist/runtime/client.mjs",
+      "types": "./dist/runtime/client.d.ts"
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "*.d.ts"
   ],
   "scripts": {
-    "prepack": "nuxt-module-build",
+    "prepublishOnly": "nr build",
     "build": "nuxt-module-build",
-    "play": "nuxi dev playground",
+    "play": "nr build && nuxi dev playground",
     "lint": "eslint .",
-    "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground"
+    "prepare": "nuxi prepare playground"
   },
   "dependencies": {
     "@nuxt/kit": "^3.0.0-rc.3",
     "fs-extra": "^10.1.0",
     "h3": "^0.7.8",
+    "ohash": "^0.1.0",
     "ohmyfetch": "^0.4.17",
     "ufo": "^0.8.4"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.23.1",
+    "@antfu/ni": "^0.16.2",
     "@nuxt/module-builder": "^0.1.7",
     "@types/fs-extra": "^9.0.13",
     "eslint": "^8.15.0",
     "nuxt": "^3.0.0-rc.3",
+    "nuxt-server-fn": "workspace:*",
     "typescript": "^4.6.4"
   }
 }
