@@ -16,12 +16,7 @@ export type ClientRPC<T> = {
 }
 
 export function createServerFn<T>() {
-  /**
-   * Use server functions in client
-   * A POST request to Nuxt server will be created for each function call and will not cache.
-   * For a cached version, use `useServerStateFn()`
-   */
-  function useServerFn() {
+  return () => {
     return new Proxy({}, {
       get(_, name) {
         return async (...args: any[]) => {
@@ -36,15 +31,10 @@ export function createServerFn<T>() {
       },
     }) as ClientRPC<T>
   }
-
-  return useServerFn
 }
 
 export function createServerStateFn<T>() {
-  /**
-   * Auto cached version of `useServerFn`. Use `useState` under the hood. The result will be shared across client and server for hydration.
-   */
-  function useServerStateFn() {
+  return () => {
     const _cache = useState('server-fn-cache', () => new Map<string, any>())
     const _promise = useState('server-fn-promise', () => new Map<string, Promise<T>>())
 
@@ -78,6 +68,4 @@ export function createServerStateFn<T>() {
       },
     }) as ClientRPC<T>
   }
-
-  return useServerStateFn
 }

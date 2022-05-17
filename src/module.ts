@@ -42,7 +42,17 @@ export default defineNuxtModule<ModuleOptions>({
 import { createServerFn, createServerStateFn } from 'nuxt-server-fn/client'
 import type * as functions from '~/server/fn'
 
+/**
+ * Use server functions in client
+ * A POST request to Nuxt server will be created for each function call and will not cache.
+ * For a cached version, use \`useServerStateFn()\`
+ */
 export const useServerFn = createServerFn<typeof functions>()
+
+/**
+ * Auto cached version of \`useServerFn()\`, using \`useState()\` under the hood.
+ * The result will be shared across client and server for hydration.
+ */
 export const useServerStateFn = createServerStateFn<typeof functions>()
 `.trimStart())
 
