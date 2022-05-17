@@ -15,12 +15,12 @@ export type ClientRPC<T> = {
   [K in keyof T]: T[K] extends (...args: any) => any ? Promisify<T[K]> : never
 }
 
-export function createServerFn<T>() {
+export function createServerFn<T>(route: string) {
   return () => {
     return new Proxy({}, {
       get(_, name) {
         return async (...args: any[]) => {
-          return $fetch('/api/__server_fn__', {
+          return $fetch(route, {
             method: 'POST',
             body: {
               name,
@@ -33,7 +33,7 @@ export function createServerFn<T>() {
   }
 }
 
-export function createServerStateFn<T>() {
+export function createServerStateFn<T>(route: string) {
   return () => {
     const _cache = useState('server-fn-cache', () => new Map<string, any>())
     const _promise = useState('server-fn-promise', () => new Map<string, Promise<T>>())
@@ -48,7 +48,7 @@ export function createServerStateFn<T>() {
           if (_promise.value.has(hash))
             return _promise.value.get(hash)
 
-          const request = $fetch('/api/__server_fn__', {
+          const request = $fetch(route, {
             method: 'POST',
             body: {
               name,
