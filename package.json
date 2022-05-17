@@ -1,7 +1,7 @@
 {
   "name": "nuxt-server-fn",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "packageManager": "pnpm@7.1.0",
   "license": "MIT",
   "homepage": "https://github.com/antfu/nuxt-server-fn#readme",
