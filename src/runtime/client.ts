@@ -1,5 +1,4 @@
 import { hash as ohash } from 'ohash'
-import { ROUTE } from './constant'
 // @ts-expect-error nuxt
 import { useState } from '#app'
 
@@ -31,7 +30,7 @@ export function createServerFnClient<T>() {
           if (_promise.value.has(hash))
             return _promise.value.get(hash)
 
-          const request = $fetch(`/api/${ROUTE}`, {
+          const request = $fetch('/api/__server_fn__', {
             method: 'GET',
             params: {
               name,
@@ -56,7 +55,7 @@ export function createServerFnClient<T>() {
     return new Proxy({}, {
       get(_, name) {
         return async (...args: any[]) => {
-          return $fetch(`/api/${ROUTE}`, {
+          return $fetch('/api/__server_fn__', {
             method: 'POST',
             body: {
               name,
