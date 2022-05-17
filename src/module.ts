@@ -33,7 +33,7 @@ export default defineNuxtModule<ModuleOptions>({
         },
         {
           from: clientPath,
-          name: 'useServerSateFn',
+          name: 'useServerStateFn',
         },
       )
     })
@@ -43,7 +43,7 @@ import { createServerFn, createServerStateFn } from 'nuxt-server-fn/client'
 import type * as functions from '~/server/fn'
 
 export const useServerFn = createServerFn<typeof functions>()
-export const useServerSateFn = createServerStateFn<typeof functions>()
+export const useServerStateFn = createServerStateFn<typeof functions>()
 `.trimStart())
 
     await fs.writeFile(handlerPath, `
