@@ -2,7 +2,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/nuxt-server-fn?color=a1b858&label=)](https://www.npmjs.com/package/nuxt-server-fn)
 
-Server functions RPC in client for Nuxt 3.
+Server functions in client for Nuxt 3. [Experiments of this RFC](https://github.com/unjs/nitro/discussions/235).
 
 > ⚠️ Experimental ⚠️ APIs are subject to change.
 
