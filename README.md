@@ -23,6 +23,8 @@ export default defineNuxtConfig({
 })
 ```
 
+## Usage
+
 Expose server functions under `server/fn/index.ts`
 
 ```ts
@@ -36,8 +38,8 @@ export function myFunction(name: string) {
 On the client side:
 
 ```ts
-const serverFn = useServerStateFn()
-const msg = await serverFn.myFunction('Nuxt') // 'Hello Nuxt from server'
+const { myFunction } = useServerStateFn()
+const msg = await myFunction('Nuxt') // 'Hello Nuxt from server'
 ```
 
 ## Client Functions
@@ -64,6 +66,42 @@ For a cached version, use `useServerStateFn()` instead.
 const serverFn = useServerStateFn()
 const msg1 = await serverFn.myFunction('Nuxt')
 const msg2 = await serverFn.myFunction('Nuxt') // functions with same arguments will be cached, only one request
+```
+
+## Server
+
+### Functions Organization
+
+Functions exported inside `server/fn/index.ts` will be available to client. 
+
+To have functions from multiple files, you can use ESM exports to redirect them. For example
+
+```ts
+// server/fn/foo.ts
+export function useFoo() {}
+```
+
+```ts
+// server/fn/index.ts
+export * from './foo'
+```
+
+`useFoo` then is available to use.
+
+### Request Context
+
+Request context is available as `this` for functions. When using TypeScript, the type of `this` needs to be specified explicitly as `H3Event` from `h3`.
+
+For example:
+
+```ts
+import type { H3Event } from 'h3'
+
+export function myFunction(this: H3Event, firstArg: any) {
+  const { req, res } = this
+  const body = useBody(this)
+  // ...
+}
 ```
 
 ## Sponsors

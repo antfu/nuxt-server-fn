@@ -22,7 +22,8 @@ export function createServerFnAPI<T>(functions: T): EventHandler<T> {
       event.res.statusCode = 404
       return
     }
-    const result = await functions[name](...args)
+
+    const result = await functions[name].apply(event, args)
     return result
   }
 }
