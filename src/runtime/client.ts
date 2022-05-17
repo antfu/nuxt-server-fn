@@ -15,8 +15,36 @@ export type ClientRPC<T> = {
   [K in keyof T]: T[K] extends (...args: any) => any ? Promisify<T[K]> : never
 }
 
-export function createServerFnClient<T>() {
-  function withCache() {
+export function createServerFn<T>() {
+  /**
+   * Use server functions in client
+   * A POST request to Nuxt server will be created for each function call and will not cache.
+   * For a cached version, use `useServerStateFn()`
+   */
+  function useServerFn() {
+    return new Proxy({}, {
+      get(_, name) {
+        return async (...args: any[]) => {
+          return $fetch('/api/__server_fn__', {
+            method: 'POST',
+            body: {
+              name,
+              args,
+            },
+          })
+        }
+      },
+    }) as ClientRPC<T>
+  }
+
+  return useServerFn
+}
+
+export function createServerStateFn<T>() {
+  /**
+   * Auto cached version of `useServerFn`. Use `useState` under the hood. The result will be shared across client and server for hydration.
+   */
+  function useServerStateFn() {
     const _cache = useState('server-fn-cache', () => new Map<string, any>())
     const _promise = useState('server-fn-promise', () => new Map<string, Promise<T>>())
 
@@ -31,10 +59,10 @@ export function createServerFnClient<T>() {
             return _promise.value.get(hash)
 
           const request = $fetch('/api/__server_fn__', {
-            method: 'GET',
-            params: {
+            method: 'POST',
+            body: {
               name,
-              args: JSON.stringify(args),
+              args,
             },
           })
             .then((r) => {
@@ -48,33 +76,8 @@ export function createServerFnClient<T>() {
           return request
         }
       },
-    }) as any
+    }) as ClientRPC<T>
   }
 
-  function noCache() {
-    return new Proxy({}, {
-      get(_, name) {
-        return async (...args: any[]) => {
-          return $fetch('/api/__server_fn__', {
-            method: 'POST',
-            body: {
-              name,
-              args,
-            },
-          })
-        }
-      },
-    })
-  }
-
-  /**
-   * Execute server functions via RPC
-   *
-   * @param cache - cache requests with same arguments (default true)
-   */
-  function useServerFn(cache = true): ClientRPC<T> {
-    return cache ? withCache() : noCache()
-  }
-
-  return useServerFn
+  return useServerStateFn
 }

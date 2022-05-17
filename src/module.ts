@@ -26,18 +26,24 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     nuxt.hook('autoImports:extend', (imports) => {
-      imports.push({
-        from: clientPath,
-        name: 'useServerFn',
-        as: 'useServerFn',
-      })
+      imports.push(
+        {
+          from: clientPath,
+          name: 'useServerFn',
+        },
+        {
+          from: clientPath,
+          name: 'useServerSateFn',
+        },
+      )
     })
 
     await fs.writeFile(clientPath, `
-import { createServerFnClient } from 'nuxt-server-fn/client'
+import { createServerFn, createServerStateFn } from 'nuxt-server-fn/client'
 import type * as functions from '~/server/fn'
 
-export const useServerFn = createServerFnClient<typeof functions>()
+export const useServerFn = createServerFn<typeof functions>()
+export const useServerSateFn = createServerStateFn<typeof functions>()
 `.trimStart())
 
     await fs.writeFile(handlerPath, `

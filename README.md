@@ -36,15 +36,34 @@ export function myFunction(name: string) {
 On the client side:
 
 ```ts
-const serverFn = useServerFn()
+const serverFn = useServerStateFn()
 const msg = await serverFn.myFunction('Nuxt') // 'Hello Nuxt from server'
 ```
 
-By default the server functions are **aggressively cached** using the [`useState()` hook](https://v3.nuxtjs.org/api/composables/use-state) under the hood. Multiple calls to the same arguments will reuse the same result across client and server sides. To opt-out, pass `false` to `useServerFn`
+## Client Functions
+
+Client functions can be auto imported.
+
+### `useServerFn()`
+
+Use server functions in client. A POST request to Nuxt server will be created for each function call and will not cache.
 
 ```ts
-const serverFn = useServerFn(false) // no cache
-const msg = await serverFn.myFunction('Nuxt')
+const serverFn = useServerFn()
+const msg1 = await serverFn.myFunction('Nuxt')
+const msg2 = await serverFn.myFunction('Nuxt') // two requests will be fired
+```
+
+For a cached version, use `useServerStateFn()` instead.
+
+### `useServerStateFn()`
+
+**Aggressively cached** version of `useServerFn()` using the [`useState()` hook](https://v3.nuxtjs.org/api/composables/use-state) under the hood. Multiple calls to the same arguments will reuse the same result across client and server sides for hydration.
+
+```ts
+const serverFn = useServerStateFn()
+const msg1 = await serverFn.myFunction('Nuxt')
+const msg2 = await serverFn.myFunction('Nuxt') // functions with same arguments will be cached, only one request
 ```
 
 ## Sponsors

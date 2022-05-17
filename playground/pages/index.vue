@@ -1,12 +1,12 @@
 <script setup lang="ts">
 const fn = useServerFn()
-const data = await fn.getCWD()
-const hi = await fn.sayHi('Hello')
+const cwd = await fn.getCWD()
+const hi = await fn.sayHi('world')
 </script>
 
 <template>
   <div>
-    {{ data }}
-    {{ hi }}
+    <div>{{ cwd }}</div>
+    <div>{{ hi }}</div>
   </div>
 </template>
