@@ -1,6 +1,6 @@
 import { hash as ohash } from 'ohash'
 // @ts-expect-error nuxt
-import { useState } from '#app'
+import { useNuxtApp } from '#app'
 
 declare const $fetch: typeof import('ohmyfetch').$fetch
 
@@ -35,33 +35,29 @@ export function createServerFn<T>(route: string) {
 
 export function createServerStateFn<T>(route: string) {
   return () => {
-    const _cache = useState('server-fn-cache', () => new Map<string, any>())
-    const _promise = useState('server-fn-promise', () => new Map<string, Promise<T>>())
+    const nuxt = useNuxtApp()
+    nuxt.payload.functions = nuxt.payload.functions || {}
+    const _promise: Map<string, Promise<T>> = nuxt.__server_function_promise = nuxt.__server_function_promise || new Map()
 
     return new Proxy({}, {
       get(_, name) {
         return async (...args: any[]) => {
-          const hash = ohash({ name, args })
-          if (_cache.value.has(hash))
-            return _cache.value.get(hash)
+          const body = { name, args }
+          const hash = ohash(body)
+          if (hash in nuxt.payload.functions)
+            return nuxt.payload.functions[hash]
 
-          if (_promise.value.has(hash))
-            return _promise.value.get(hash)
+          if (_promise.has(hash))
+            return _promise.get(hash)
 
-          const request = $fetch(route, {
-            method: 'POST',
-            body: {
-              name,
-              args,
-            },
-          })
+          const request = $fetch(route, { method: 'POST', body })
             .then((r) => {
-              _cache.value.set(hash, r)
-              _promise.value.delete(hash)
+              nuxt.payload.functions[hash] = r
+              _promise.delete(hash)
               return r
             })
 
-          _promise.value.set(hash, request)
+          _promise.set(hash, request)
 
           return request
         }

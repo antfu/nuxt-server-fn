@@ -42,6 +42,8 @@ const { myFunction } = useServerStateFn()
 const msg = await myFunction('Nuxt') // 'Hello Nuxt from server'
 ```
 
+Checkout [the playground example](https://github.com/antfu/nuxt-server-fn/blob/main/playground).
+
 ## Client Functions
 
 Client functions can be auto imported.
