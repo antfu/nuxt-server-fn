@@ -49,7 +49,8 @@
     "h3": "^0.7.8",
     "ohash": "^0.1.0",
     "ohmyfetch": "^0.4.17",
-    "ufo": "^0.8.4"
+    "ufo": "^0.8.4",
+    "fast-glob": "^3.2.11"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.23.1",

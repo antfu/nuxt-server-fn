@@ -11,6 +11,7 @@ importers:
       '@types/fs-extra': ^9.0.13
       bumpp: ^7.1.1
       eslint: ^8.15.0
+      fast-glob: ^3.2.11
       fs-extra: ^10.1.0
       h3: ^0.7.8
       nuxt: ^3.0.0-rc.3
@@ -33,6 +34,7 @@ importers:
       '@types/fs-extra': 9.0.13
       bumpp: 7.1.1
       eslint: 8.15.0
+      fast-glob: 3.2.11
       nuxt: 3.0.0-rc.3
       nuxt-server-fn: 'link:'
       typescript: 4.6.4

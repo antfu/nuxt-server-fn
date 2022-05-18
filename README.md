@@ -25,10 +25,10 @@ export default defineNuxtConfig({
 
 ## Usage
 
-Expose server functions under `server/fn/index.ts`
+Expose server functions under `server/functions/*index*.ts`
 
 ```ts
-// server/fn/index.ts
+// server/functions/foo.ts
 
 export function myFunction(name: string) {
   return `Hello ${name} from server`
@@ -70,23 +70,7 @@ const msg2 = await serverFn.myFunction('Nuxt') // functions with same arguments 
 
 ## Server
 
-### Functions Organization
-
-Functions exported inside `server/fn/index.ts` will be available to client. 
-
-To have functions from multiple files, you can use ESM exports to redirect them. For example
-
-```ts
-// server/fn/foo.ts
-export function useFoo() {}
-```
-
-```ts
-// server/fn/index.ts
-export * from './foo'
-```
-
-`useFoo` then is available to use.
+Named exported inside `server/functions/*.ts` will be available to client automatically.
 
 ### Request Context
 
