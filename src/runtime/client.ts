@@ -15,26 +15,35 @@ export type ClientRPC<T> = {
   [K in keyof T]: T[K] extends (...args: any) => any ? Promisify<T[K]> : never
 }
 
-export function createServerFn<T>(route: string) {
-  return () => {
-    return new Proxy({}, {
-      get(_, name) {
-        return async (...args: any[]) => {
-          return $fetch(route, {
-            method: 'POST',
-            body: {
-              name,
-              args,
-            },
-          })
-        }
-      },
-    }) as ClientRPC<T>
-  }
+export interface ServerFunctionsOptions {
+  /**
+   * Cache result with same arguments for hydration
+   *
+   * @default true
+   */
+  cache?: boolean
 }
 
-export function createServerStateFn<T>(route: string) {
-  return () => {
+export function createServerFunctions<T>(route: string) {
+  return (options: ServerFunctionsOptions = {}) => {
+    const { cache = true } = options
+
+    if (!cache) {
+      return new Proxy({}, {
+        get(_, name) {
+          return async (...args: any[]) => {
+            return $fetch(route, {
+              method: 'POST',
+              body: {
+                name,
+                args,
+              },
+            })
+          }
+        },
+      }) as ClientRPC<T>
+    }
+
     const nuxt = useNuxtApp()
     nuxt.payload.functions = nuxt.payload.functions || {}
     const _promise: Map<string, Promise<T>> = nuxt.__server_function_promise = nuxt.__server_function_promise || new Map()

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const fn = useServerStateFn()
+const fn = useServerFunctions()
 const cwd = await fn.getCWD()
 const hi = await fn.sayHi('world')
 </script>

@@ -45,11 +45,7 @@ export default defineNuxtModule<ModuleOptions>({
       imports.push(
         {
           from: clientPath,
-          name: 'useServerFn',
-        },
-        {
-          from: clientPath,
-          name: 'useServerStateFn',
+          name: 'useServerFunctions',
         },
       )
     })
@@ -61,21 +57,13 @@ export default defineNuxtModule<ModuleOptions>({
     await fs.writeFile(functionsPath, files.map(i => `export * from ${JSON.stringify(i.replace(/\.ts$/, ''))}`).join('\n'))
 
     await fs.writeFile(clientPath, `
-import { createServerFn, createServerStateFn } from 'nuxt-server-fn/client'
+import { createServerFunctions } from 'nuxt-server-fn/client'
 import type * as functions from '#build/server-fn'
 
 /**
- * Use server functions in client
- * A POST request to Nuxt server will be created for each function call and will not cache.
- * For a cached version, use \`useServerStateFn()\`
+ * Use server functions in client.
  */
-export const useServerFn = createServerFn<typeof functions>("${apiRoute}")
-
-/**
- * Auto cached version of \`useServerFn()\`, using \`useState()\` under the hood.
- * The result will be shared across client and server for hydration.
- */
-export const useServerStateFn = createServerStateFn<typeof functions>("${apiRoute}")
+export const useServerFunctions = createServerFunctions<typeof functions>("${apiRoute}")
 `.trimStart())
 
     await fs.writeFile(handlerPath, `
