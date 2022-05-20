@@ -1,6 +1,5 @@
 import { join } from 'path'
-import { addServerHandler, defineNuxtModule } from '@nuxt/kit'
-import fs from 'fs-extra'
+import { addServerHandler, addTemplate, defineNuxtModule } from '@nuxt/kit'
 import fg from 'fast-glob'
 
 export interface ModuleOptions {
@@ -26,7 +25,6 @@ export default defineNuxtModule<ModuleOptions>({
     const dirs = [
       join(nuxt.options.rootDir, 'server/functions'),
     ]
-    const functionsPath = join(nuxt.options.buildDir, 'server-fn.ts')
     const clientPath = join(nuxt.options.buildDir, 'server-fn-client.ts')
     const handlerPath = join(nuxt.options.buildDir, 'server-fn-handler.ts')
 
@@ -54,9 +52,19 @@ export default defineNuxtModule<ModuleOptions>({
       (await Promise.all(dirs.map(dir => fg('*.{ts,js}', { cwd: dir, absolute: true, onlyFiles: true })))).flat(),
     ))
 
-    await fs.writeFile(functionsPath, files.map(i => `export * from ${JSON.stringify(i.replace(/\.ts$/, ''))}`).join('\n'))
+    addTemplate({
+      filename: 'server-fn.ts',
+      write: true,
+      getContents() {
+        return files.map(i => `export * from ${JSON.stringify(i.replace(/\.ts$/, ''))}`).join('\n')
+      },
+    })
 
-    await fs.writeFile(clientPath, `
+    addTemplate({
+      filename: 'server-fn-client.ts',
+      write: true,
+      getContents() {
+        return `
 import { createServerFunctions } from 'nuxt-server-fn/client'
 import type * as functions from '#build/server-fn'
 
@@ -64,13 +72,21 @@ import type * as functions from '#build/server-fn'
  * Use server functions in client.
  */
 export const useServerFunctions = createServerFunctions<typeof functions>("${apiRoute}")
-`.trimStart())
+`.trimStart()
+      },
+    })
 
-    await fs.writeFile(handlerPath, `
-import { createServerFnAPI } from 'nuxt-server-fn/api'
+    addTemplate({
+      filename: 'server-fn-handler.ts',
+      write: true,
+      getContents() {
+        return `
+        import { createServerFnAPI } from 'nuxt-server-fn/api'
 ${files.map((i, idx) => `import * as functions${idx} from ${JSON.stringify(i.replace(/\.ts$/, ''))}`).join('\n')}
 
 export default createServerFnAPI(Object.assign({}, ${files.map((_, idx) => `functions${idx}`).join(', ')}))
-`.trimStart())
+`.trimStart()
+      },
+    })
   },
 })
