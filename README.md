@@ -25,7 +25,7 @@ export default defineNuxtConfig({
 
 ## Usage
 
-Expose server functions under `server/functions/*index*.ts`
+Expose server functions under `server/functions/*.ts`
 
 ```ts
 // server/functions/foo.ts
