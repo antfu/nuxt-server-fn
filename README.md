@@ -68,6 +68,24 @@ const msg1 = await serverFn.myFunction('Nuxt')
 const msg2 = await serverFn.myFunction('Nuxt') // two requests will be fired
 ```
 
+Or you can use `$cached` or `$cacheless` property to toggle between them for each call:
+
+```ts
+const serverFn = useServerFunctions() // cached by default
+
+const msg1 = await serverFn.myFunction('Nuxt')
+
+const msg2 = await serverFn.$cacheless.myFunction('Nuxt') // opt-out cache for this call
+```
+
+```ts
+const serverFn = useServerFunctions({ cache: false }) // no cache
+
+const msg1 = await serverFn.myFunction('Nuxt') // no cache
+
+const msg2 = await serverFn.$cached.myFunction('Nuxt') // opt-in cache for this call
+```
+
 ## Server
 
 Named exported inside `server/functions/*.ts` will be available to client automatically.

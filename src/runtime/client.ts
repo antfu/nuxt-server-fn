@@ -11,66 +11,98 @@ export type Promisify<T> = ReturnType<T> extends Promise<any>
   ? T
   : (...args: ArgumentsType<T>) => Promise<Awaited<ReturnType<T>>>
 
-export type ClientRPC<T> = {
+export type FunctionsClient<T> = {
   [K in keyof T]: T[K] extends (...args: any) => any ? Promisify<T[K]> : never
 }
 
-export interface ServerFunctionsOptions {
+export type CachedFunctionsClient<T> = FunctionsClient<T> & {
+  /**
+   * Get uncached version of the functions
+   */
+  $cacheless: CachelessFunctionsClient<T>
+}
+export type CachelessFunctionsClient<T> = FunctionsClient<T> & {
+  /**
+   * Get cached version of the functions
+   */
+  $cached: CachedFunctionsClient<T>
+}
+
+export interface ServerFunctionsOptions<Cache extends boolean = true> {
   /**
    * Cache result with same arguments for hydration
    *
    * @default true
    */
-  cache?: boolean
+  cache?: Cache
+}
+
+interface InternalState<T> {
+  promiseMap: Map<string, Promise<T>>
+  cachedClient: CachedFunctionsClient<T>
+  cachelessClient: CachelessFunctionsClient<T>
 }
 
 export function createServerFunctions<T>(route: string) {
-  return (options: ServerFunctionsOptions = {}) => {
+  return <C extends boolean = true>(
+    options: ServerFunctionsOptions<C> = {},
+  ): C extends false ? CachelessFunctionsClient<T>: CachedFunctionsClient<T> => {
     const { cache = true } = options
-
-    if (!cache) {
-      return new Proxy({}, {
-        get(_, name) {
-          return async (...args: any[]) => {
-            return $fetch(route, {
-              method: 'POST',
-              body: {
-                name,
-                args,
-              },
-            })
-          }
-        },
-      }) as ClientRPC<T>
-    }
-
     const nuxt = useNuxtApp()
     nuxt.payload.functions = nuxt.payload.functions || {}
-    const _promise: Map<string, Promise<T>> = nuxt.__server_function_promise = nuxt.__server_function_promise || new Map()
 
-    return new Proxy({}, {
+    const state = nuxt.__server_fn__ || {} as InternalState<T>
+    const promiseMap = state.promiseMap = state.promiseMap || new Map()
+
+    let cachedClient: CachedFunctionsClient<T>
+    let cachelessClient: CachelessFunctionsClient<T>
+
+    // eslint-disable-next-line prefer-const
+    cachelessClient = state.noCacheClient = state.noCacheClient || new Proxy({}, {
       get(_, name) {
+        if (name === '$cached')
+          return cachedClient
+
+        return async (...args: any[]) => {
+          return $fetch(route, {
+            method: 'POST',
+            body: {
+              name,
+              args,
+            },
+          })
+        }
+      },
+    }) as CachelessFunctionsClient<T>
+
+    cachedClient = state.cacheClient = state.cacheClient || new Proxy({}, {
+      get(_, name) {
+        if (name === '$cacheless')
+          return cachelessClient
+
         return async (...args: any[]) => {
           const body = { name, args }
           const hash = ohash(body)
           if (hash in nuxt.payload.functions)
             return nuxt.payload.functions[hash]
 
-          if (_promise.has(hash))
-            return _promise.get(hash)
+          if (promiseMap.has(hash))
+            return promiseMap.get(hash)
 
           const request = $fetch(route, { method: 'POST', body })
             .then((r) => {
               nuxt.payload.functions[hash] = r
-              _promise.delete(hash)
+              promiseMap.delete(hash)
               return r
             })
 
-          _promise.set(hash, request)
+          promiseMap.set(hash, request)
 
           return request
         }
       },
-    }) as ClientRPC<T>
+    }) as CachedFunctionsClient<T>
+
+    return (cache ? cachedClient : cachelessClient) as any
   }
 }
