@@ -38,7 +38,7 @@ export function myFunction(name: string) {
 On the client side:
 
 ```ts
-const { myFunction } = useServerStateFn()
+const { myFunction } = useServerFunctions()
 const msg = await myFunction('Nuxt') // 'Hello Nuxt from server'
 ```
 
