@@ -21,22 +21,31 @@ export default defineNuxtModule<ModuleOptions>({
     const {
       apiRoute,
     } = options
-
+    const extGlob = '*.{ts,js}'
     const dirs = [
+      // TODO: read from extends
       join(nuxt.options.rootDir, 'server/functions'),
     ]
     const clientPath = join(nuxt.options.buildDir, 'server-fn-client.ts')
     const handlerPath = join(nuxt.options.buildDir, 'server-fn-handler.ts')
 
     nuxt.hook('config', (options) => {
+      options.watch.push(...dirs.map(i => join(i, extGlob)))
       options.build.transpile.push('nuxt-server-fn/client')
       options.build.transpile.push('#build/server-fn-client')
       options.build.transpile.push('#build/server-fn-handler')
     })
 
-    addServerHandler({
-      route: apiRoute,
-      handler: handlerPath,
+    const files: string[] = []
+
+    nuxt.hook('builder:watch', async (e, path) => {
+      if (e === 'change')
+        return
+      const abs = join(nuxt.options.rootDir, path)
+      if (files.includes(abs) || dirs.some(dir => abs.startsWith(dir))) {
+        await scanServerFunctions()
+        await nuxt.callHook('builder:generateApp')
+      }
     })
 
     nuxt.hook('autoImports:extend', (imports) => {
@@ -48,13 +57,17 @@ export default defineNuxtModule<ModuleOptions>({
       )
     })
 
-    const files = Array.from(new Set(
-      (await Promise.all(dirs.map(dir => fg('*.{ts,js}', { cwd: dir, absolute: true, onlyFiles: true })))).flat(),
-    ))
+    addServerHandler({
+      route: apiRoute,
+      handler: handlerPath,
+    })
+
+    await scanServerFunctions()
 
     addTemplate({
       filename: 'server-fn.ts',
       write: true,
+      options: { files },
       getContents() {
         return files.map(i => `export * from ${JSON.stringify(i.replace(/\.ts$/, ''))}`).join('\n')
       },
@@ -79,14 +92,25 @@ export const useServerFunctions = createServerFunctions<typeof functions>("${api
     addTemplate({
       filename: 'server-fn-handler.ts',
       write: true,
+      options: { files },
       getContents() {
         return `
-        import { createServerFnAPI } from 'nuxt-server-fn/api'
+import { createServerFnAPI } from 'nuxt-server-fn/api'
 ${files.map((i, idx) => `import * as functions${idx} from ${JSON.stringify(i.replace(/\.ts$/, ''))}`).join('\n')}
 
 export default createServerFnAPI(Object.assign({}, ${files.map((_, idx) => `functions${idx}`).join(', ')}))
 `.trimStart()
       },
     })
+
+    async function scanServerFunctions() {
+      files.length = 0
+      files.push(...new Set(
+        (await Promise.all(
+          dirs.map(dir => fg(extGlob, { cwd: dir, absolute: true, onlyFiles: true })))
+        ).flat(),
+      ))
+      return files
+    }
   },
 })
