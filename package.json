@@ -3,34 +3,34 @@
   "type": "module",
   "version": "0.2.2",
   "packageManager": "pnpm@7.1.0",
-  "license": "MIT",
-  "homepage": "https://github.com/antfu/nuxt-server-fn#readme",
-  "bugs": {
-    "url": "https://github.com/antfu/nuxt-server-fn/issues"
-  },
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/antfu",
+  "homepage": "https://github.com/antfu/nuxt-server-fn#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/antfu/nuxt-server-fn.git"
   },
-  "funding": "https://github.com/sponsors/antfu",
-  "main": "./dist/module.cjs",
-  "types": "./dist/types.d.ts",
+  "bugs": {
+    "url": "https://github.com/antfu/nuxt-server-fn/issues"
+  },
   "exports": {
     ".": {
-      "import": "./dist/module.mjs",
+      "types": "./dist/module.d.ts",
       "require": "./dist/module.cjs",
-      "types": "./dist/module.d.ts"
+      "import": "./dist/module.mjs"
     },
     "./api": {
-      "import": "./dist/runtime/api.mjs",
-      "types": "./dist/runtime/api.d.ts"
+      "types": "./dist/runtime/api.d.ts",
+      "import": "./dist/runtime/api.mjs"
     },
     "./client": {
-      "import": "./dist/runtime/client.mjs",
-      "types": "./dist/runtime/client.d.ts"
+      "types": "./dist/runtime/client.d.ts",
+      "import": "./dist/runtime/client.mjs"
     }
   },
+  "main": "./dist/module.cjs",
+  "types": "./dist/types.d.ts",
   "files": [
     "dist",
     "*.d.ts"
@@ -45,20 +45,20 @@
   },
   "dependencies": {
     "@nuxt/kit": "^3.0.0-rc.3",
+    "fast-glob": "^3.2.11",
     "h3": "^0.7.8",
     "ohash": "^0.1.0",
-    "ohmyfetch": "^0.4.17",
-    "ufo": "^0.8.4",
-    "fast-glob": "^3.2.11"
+    "ohmyfetch": "^0.4.18",
+    "ufo": "^0.8.4"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.23.1",
+    "@antfu/eslint-config": "^0.25.1",
     "@antfu/ni": "^0.16.2",
     "@nuxt/module-builder": "^0.1.7",
     "bumpp": "^7.1.1",
-    "eslint": "^8.15.0",
+    "eslint": "^8.17.0",
     "nuxt": "^3.0.0-rc.3",
     "nuxt-server-fn": "workspace:*",
-    "typescript": "^4.6.4"
+    "typescript": "^4.7.3"
   }
 }

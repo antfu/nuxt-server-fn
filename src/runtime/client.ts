@@ -46,7 +46,7 @@ interface InternalState<T> {
 export function createServerFunctions<T>(route: string) {
   return <C extends boolean = true>(
     options: ServerFunctionsOptions<C> = {},
-  ): C extends false ? CachelessFunctionsClient<T>: CachedFunctionsClient<T> => {
+  ): C extends false ? CachelessFunctionsClient<T> : CachedFunctionsClient<T> => {
     const { cache = true } = options
     const nuxt = useNuxtApp()
     nuxt.payload.functions = nuxt.payload.functions || {}
