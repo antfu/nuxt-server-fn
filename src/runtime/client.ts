@@ -76,27 +76,27 @@ export function createServerFunctions<T>(route: string) {
     }) as CachelessFunctionsClient<T>
 
     cachedClient = state.cacheClient = state.cacheClient || new Proxy({}, {
-      get(_, name) {
+      get(_, name: string) {
         if (name === '$cacheless')
           return cachelessClient
 
         return async (...args: any[]) => {
           const body = { name, args }
-          const hash = ohash(body)
-          if (hash in nuxt.payload.functions)
-            return nuxt.payload.functions[hash]
+          const key = args.length === 0 ? name : `${name}-${ohash(args)}`
+          if (key in nuxt.payload.functions)
+            return nuxt.payload.functions[key]
 
-          if (promiseMap.has(hash))
-            return promiseMap.get(hash)
+          if (promiseMap.has(key))
+            return promiseMap.get(key)
 
           const request = $fetch(route, { method: 'POST', body })
             .then((r) => {
-              nuxt.payload.functions[hash] = r
-              promiseMap.delete(hash)
+              nuxt.payload.functions[key] = r
+              promiseMap.delete(key)
               return r
             })
 
-          promiseMap.set(hash, request)
+          promiseMap.set(key, request)
 
           return request
         }
