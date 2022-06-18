@@ -49,16 +49,16 @@ export function createServerFunctions<T>(route: string) {
   ): C extends false ? CachelessFunctionsClient<T> : CachedFunctionsClient<T> => {
     const { cache = true } = options
     const nuxt = useNuxtApp()
-    nuxt.payload.functions = nuxt.payload.functions || {}
+    const payloadCache: Record<string, any> = nuxt.payload.functions = nuxt.payload.functions || {}
 
-    const state = nuxt.__server_fn__ || {} as InternalState<T>
-    const promiseMap = state.promiseMap = state.promiseMap || new Map()
+    const state = (nuxt.__server_fn__ || {}) as InternalState<T>
+    const promiseMap: InternalState<T>['promiseMap'] = state.promiseMap = state.promiseMap || new Map()
 
     let cachedClient: CachedFunctionsClient<T>
     let cachelessClient: CachelessFunctionsClient<T>
 
     // eslint-disable-next-line prefer-const
-    cachelessClient = state.noCacheClient = state.noCacheClient || new Proxy({}, {
+    cachelessClient = state.cachelessClient = state.cachelessClient || new Proxy({}, {
       get(_, name) {
         if (name === '$cached')
           return cachedClient
@@ -75,7 +75,7 @@ export function createServerFunctions<T>(route: string) {
       },
     }) as CachelessFunctionsClient<T>
 
-    cachedClient = state.cacheClient = state.cacheClient || new Proxy({}, {
+    cachedClient = state.cachedClient = state.cachedClient || new Proxy({}, {
       get(_, name: string) {
         if (name === '$cacheless')
           return cachelessClient
@@ -83,15 +83,16 @@ export function createServerFunctions<T>(route: string) {
         return async (...args: any[]) => {
           const body = { name, args }
           const key = args.length === 0 ? name : `${name}-${ohash(args)}`
-          if (key in nuxt.payload.functions)
-            return nuxt.payload.functions[key]
+
+          if (key in payloadCache)
+            return payloadCache[key]
 
           if (promiseMap.has(key))
             return promiseMap.get(key)
 
           const request = $fetch(route, { method: 'POST', body })
             .then((r) => {
-              nuxt.payload.functions[key] = r
+              payloadCache[key] = r
               promiseMap.delete(key)
               return r
             })
