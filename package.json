@@ -2,7 +2,7 @@
   "name": "nuxt-server-fn",
   "type": "module",
   "version": "0.2.4",
-  "packageManager": "pnpm@7.5.0",
+  "packageManager": "pnpm@7.13.0",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "license": "MIT",
   "funding": "https://github.com/sponsors/antfu",
@@ -44,21 +44,21 @@
     "prepare": "nuxi prepare playground"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.0.0-rc.5",
-    "fast-glob": "^3.2.11",
-    "h3": "^0.7.10",
-    "ohash": "^0.1.3",
-    "ohmyfetch": "^0.4.18",
-    "ufo": "^0.8.5"
+    "@nuxt/kit": "^3.0.0-rc.11",
+    "fast-glob": "^3.2.12",
+    "h3": "^0.8.1",
+    "ohash": "^0.1.5",
+    "ohmyfetch": "^0.4.19",
+    "ufo": "^0.8.6"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.25.2",
-    "@antfu/ni": "^0.17.1",
-    "@nuxt/module-builder": "^0.1.7",
+    "@antfu/eslint-config": "^0.27.0",
+    "@antfu/ni": "^0.18.2",
+    "@nuxt/module-builder": "^0.2.0",
     "bumpp": "^8.2.1",
-    "eslint": "^8.19.0",
-    "nuxt": "^3.0.0-rc.5",
+    "eslint": "^8.25.0",
+    "nuxt": "^3.0.0-rc.11",
     "nuxt-server-fn": "workspace:*",
-    "typescript": "^4.7.4"
+    "typescript": "^4.8.4"
   }
 }

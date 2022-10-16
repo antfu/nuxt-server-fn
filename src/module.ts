@@ -1,5 +1,5 @@
 import { join } from 'path'
-import { addServerHandler, addTemplate, defineNuxtModule } from '@nuxt/kit'
+import { addImports, addServerHandler, addTemplate, defineNuxtModule } from '@nuxt/kit'
 import fg from 'fast-glob'
 
 export interface ModuleOptions {
@@ -48,13 +48,9 @@ export default defineNuxtModule<ModuleOptions>({
       }
     })
 
-    nuxt.hook('autoImports:extend', (imports) => {
-      imports.push(
-        {
-          from: clientPath,
-          name: 'useServerFunctions',
-        },
-      )
+    addImports({
+      from: clientPath,
+      name: 'useServerFunctions',
     })
 
     addServerHandler({
