@@ -1,9 +1,9 @@
 import type { EventHandler } from 'h3'
-import { readBody } from 'h3'
+import { eventHandler, readBody } from 'h3'
 import { getQuery } from 'ufo'
 
 export function createServerFnAPI<T>(functions: T): EventHandler<T> {
-  return async (event) => {
+  return eventHandler(async (event) => {
     let name: string | undefined
     let args: any[] = []
 
@@ -25,5 +25,5 @@ export function createServerFnAPI<T>(functions: T): EventHandler<T> {
 
     const result = await functions[name].apply(event, args)
     return result
-  }
+  })
 }
