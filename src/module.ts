@@ -29,12 +29,9 @@ export default defineNuxtModule<ModuleOptions>({
     const clientPath = join(nuxt.options.buildDir, 'server-fn-client.ts')
     const handlerPath = join(nuxt.options.buildDir, 'server-fn-handler.ts')
 
-    nuxt.hook('config', (options) => {
-      options.watch.push(...dirs.map(i => join(i, extGlob)))
-      options.build.transpile.push('nuxt-server-fn/client')
-      options.build.transpile.push('#build/server-fn-client')
-      options.build.transpile.push('#build/server-fn-handler')
-    })
+    nuxt.options.build.transpile.push('nuxt-server-fn/client')
+    nuxt.options.build.transpile.push('#build/server-fn-client')
+    nuxt.options.build.transpile.push('#build/server-fn-handler')
 
     const files: string[] = []
 
