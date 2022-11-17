@@ -44,20 +44,20 @@
     "prepare": "nuxi prepare playground"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.0.0-rc.11",
+    "@nuxt/kit": "^3.0.0",
     "fast-glob": "^3.2.12",
-    "h3": "^0.8.1",
-    "ohash": "^0.1.5",
-    "ohmyfetch": "^0.4.19",
-    "ufo": "^0.8.6"
+    "h3": "^1.0.1",
+    "ofetch": "^1.0.0",
+    "ohash": "^1.0.0",
+    "ufo": "^1.0.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.27.0",
-    "@antfu/ni": "^0.18.2",
-    "@nuxt/module-builder": "^0.2.0",
+    "@antfu/eslint-config": "^0.31.0",
+    "@antfu/ni": "^0.18.8",
+    "@nuxt/module-builder": "^0.2.1",
     "bumpp": "^8.2.1",
     "eslint": "^8.25.0",
-    "nuxt": "^3.0.0-rc.11",
+    "nuxt": "^3.0.0",
     "nuxt-server-fn": "workspace:*",
     "typescript": "^4.8.4"
   }
