@@ -1,4 +1,5 @@
 import { hash as ohash } from 'ohash'
+
 // @ts-expect-error nuxt
 import { useNuxtApp } from '#app'
 

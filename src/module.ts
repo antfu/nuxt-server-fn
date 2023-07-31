@@ -1,4 +1,4 @@
-import { join } from 'path'
+import { join } from 'node:path'
 import { addImports, addServerHandler, addTemplate, defineNuxtModule } from '@nuxt/kit'
 import fg from 'fast-glob'
 
