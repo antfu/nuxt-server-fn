@@ -29,11 +29,12 @@ export default defineNuxtModule<ModuleOptions>({
     const clientPath = join(nuxt.options.buildDir, 'server-fn-client.ts')
     const handlerPath = join(nuxt.options.buildDir, 'server-fn-handler.ts')
 
-    nuxt.options.build.transpile.push('nuxt-server-fn/client')
-    nuxt.options.build.transpile.push('#build/server-fn-client')
-    nuxt.options.build.transpile.push('#build/server-fn-handler')
-
     const files: string[] = []
+
+    nuxt.options.vite ??= {}
+    nuxt.options.vite.optimizeDeps ??= {}
+    nuxt.options.vite.optimizeDeps.exclude ??= []
+    nuxt.options.vite.optimizeDeps.exclude.push('nuxt-server-fn')
 
     nuxt.hook('builder:watch', async (e, path) => {
       if (e === 'change')
