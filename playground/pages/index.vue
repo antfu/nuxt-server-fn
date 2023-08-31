@@ -5,7 +5,7 @@ const hi = await fn.sayHi('world')
 const hi2 = await fn.sayHi('world')
 const hi3 = await fn.$cacheless.sayHi('world')
 const heyThere = await fn.sayHey()
-const heyYou = await fn.sayHey("you")
+const heyYou = await fn.sayHey('you')
 const hello = await fn.sayHello(200)
 </script>
 
