@@ -9,7 +9,7 @@ export type ArgumentsType<T> = T extends (...args: infer A) => any ? A : never
 export type ReturnType<T> = T extends (...args: any) => infer R ? R : never
 
 export type Promisify<T> = ReturnType<T> extends Promise<any>
-  ? T
+  ? (...args: ArgumentsType<T>) => ReturnType<T>
   : (...args: ArgumentsType<T>) => Promise<Awaited<ReturnType<T>>>
 
 export type FunctionsClient<T> = {
