@@ -1,4 +1,4 @@
-import { join } from 'node:path'
+import { relative, resolve, join } from 'node:path'
 import { addImports, addServerHandler, addTemplate, defineNuxtModule } from '@nuxt/kit'
 import fg from 'fast-glob'
 
@@ -37,6 +37,7 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.vite.optimizeDeps.exclude.push('nuxt-server-fn')
 
     nuxt.hook('builder:watch', async (e, path) => {
+      path = relative(nuxt.options.srcDir, resolve(nuxt.options.srcDir, path))
       if (e === 'change')
         return
       const abs = join(nuxt.options.rootDir, path)
