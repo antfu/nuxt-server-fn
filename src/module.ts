@@ -1,4 +1,4 @@
-import { relative, resolve, join } from 'node:path'
+import { join, relative, resolve } from 'node:path'
 import { addImports, addServerHandler, addTemplate, defineNuxtModule } from '@nuxt/kit'
 import fg from 'fast-glob'
 
@@ -102,7 +102,8 @@ export default createServerFnAPI(Object.assign({}, ${files.map((_, idx) => `func
       files.length = 0
       files.push(...new Set(
         (await Promise.all(
-          dirs.map(dir => fg(extGlob, { cwd: dir, absolute: true, onlyFiles: true })))
+          dirs.map(dir => fg(extGlob, { cwd: dir, absolute: true, onlyFiles: true })),
+        )
         ).flat(),
       ))
       return files
