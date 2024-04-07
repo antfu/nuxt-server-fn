@@ -102,9 +102,9 @@ export default createServerFnAPI(Object.assign({}, ${files.map((_, idx) => `func
       files.length = 0
       files.push(...new Set(
         (await Promise.all(
-          dirs.map(dir => fg(extGlob, { cwd: dir, absolute: true, onlyFiles: true })),
+          dirs.map(dir => fg(extGlob, { cwd: dir, absolute: false, onlyFiles: true })),
         )
-        ).flat(),
+        ).flat().map(file => `../server/functions/${file}`),
       ))
       return files
     }
