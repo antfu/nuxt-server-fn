@@ -1,9 +1,7 @@
 import { hash as ohash } from 'ohash'
 
 // @ts-expect-error nuxt
-import { useNuxtApp } from '#app'
-
-declare const $fetch: typeof import('ohmyfetch').$fetch
+import { useNuxtApp, useRequestFetch } from '#app'
 
 export type ArgumentsType<T> = T extends (...args: infer A) => any ? A : never
 export type ReturnType<T> = T extends (...args: any) => infer R ? R : never
@@ -65,7 +63,7 @@ export function createServerFunctions<T>(route: string) {
           return cachedClient
 
         return async (...args: any[]) => {
-          return $fetch(route, {
+          return useRequestFetch()(route, {
             method: 'POST',
             body: {
               name,
@@ -91,7 +89,7 @@ export function createServerFunctions<T>(route: string) {
           if (promiseMap.has(key))
             return promiseMap.get(key)
 
-          const request = $fetch(route, { method: 'POST', body })
+          const request = useRequestFetch()(route, { method: 'POST', body })
             .then((r) => {
               payloadCache[key] = r
               promiseMap.delete(key)
