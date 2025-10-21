@@ -21,7 +21,7 @@ export default defineNuxtModule<ModuleOptions>({
     const {
       apiRoute,
     } = options
-    const extGlob = '*.{ts,js}'
+    const extGlob = '**/*.{ts,js}'
     const dirs = nuxt.options._layers.map(layer => join(layer.config.rootDir, 'server/functions'))
     const clientPath = join(nuxt.options.buildDir, 'server-fn-client.ts')
     const handlerPath = join(nuxt.options.buildDir, 'server-fn-handler.ts')
