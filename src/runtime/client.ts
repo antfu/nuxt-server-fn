@@ -1,7 +1,7 @@
-import { hash as ohash } from 'ohash'
-
 // @ts-expect-error nuxt
 import { useNuxtApp, useRequestFetch } from '#app'
+
+import { hash as ohash } from 'ohash'
 
 export type ArgumentsType<T> = T extends (...args: infer A) => any ? A : never
 export type ReturnType<T> = T extends (...args: any) => infer R ? R : never
