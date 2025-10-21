@@ -101,7 +101,7 @@ export default createServerFnAPI(Object.assign({}, ${files.map((_, idx) => `func
         (await Promise.all(
           dirs.map(dir => fg(extGlob, { cwd: dir, absolute: true, onlyFiles: true })),
         )
-        ).flat(),
+        ).flat().map(f => relative(nuxt.options.buildDir, f)),
       ))
       return files
     }
