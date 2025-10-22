@@ -1,4 +1,3 @@
-// @ts-expect-error nuxt
 import { useNuxtApp, useRequestFetch } from '#app'
 
 import { hash as ohash } from 'ohash'
