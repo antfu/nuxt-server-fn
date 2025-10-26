@@ -31,7 +31,7 @@
     "play": "nuxt dev playground",
     "lint": "eslint .",
     "release": "bumpp",
-    "prepare": "pnpm build && nuxt-module-build prepare && nuxt prepare playground",
+    "prepare": "nuxt-module-build prepare && nuxt prepare playground",
     "prepack": "pnpm build"
   },
   "dependencies": {

@@ -1,5 +1,7 @@
+import NuxtServerFn from '../src/module'
+
 export default defineNuxtConfig({
   modules: [
-    'nuxt-server-fn',
+    NuxtServerFn,
   ],
 })
