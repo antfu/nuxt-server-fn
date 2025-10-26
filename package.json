@@ -30,12 +30,12 @@
     "build:stub": "nuxt-module-build build --stub",
     "play": "nuxt dev playground",
     "lint": "eslint .",
-    "release": "bumpp && pnpm publish",
-    "prepare": "nuxt-module-build prepare && nuxt prepare playground",
+    "release": "bumpp",
+    "prepare": "pnpm build && nuxt-module-build prepare && nuxt prepare playground",
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.19.3",
+    "@nuxt/kit": "^4.2.0",
     "fast-glob": "^3.3.3",
     "h3": "^1.15.4",
     "ofetch": "^1.4.1",
@@ -49,7 +49,7 @@
     "@types/node": "^24.9.1",
     "bumpp": "^10.3.1",
     "eslint": "^9.38.0",
-    "nuxt": "^3.19.3",
+    "nuxt": "^4.2.0",
     "nuxt-server-fn": "workspace:*",
     "typescript": "^5.9.3"
   }
