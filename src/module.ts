@@ -1,4 +1,5 @@
-import { join, relative, resolve } from 'node:path'
+import { dirname, join, relative, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { addImports, addServerHandler, addTemplate, defineNuxtModule } from '@nuxt/kit'
 import fg from 'fast-glob'
 
@@ -8,6 +9,8 @@ export interface ModuleOptions {
    */
   apiRoute?: string
 }
+
+const distDir = dirname(fileURLToPath(import.meta.url))
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
@@ -25,6 +28,9 @@ export default defineNuxtModule<ModuleOptions>({
     const dirs = nuxt.options._layers.map(layer => join(layer.config.rootDir, 'server/functions'))
     const clientPath = join(nuxt.options.buildDir, 'server-fn-client.ts')
     const handlerPath = join(nuxt.options.buildDir, 'server-fn-handler.ts')
+
+    nuxt.options.alias['nuxt-server-fn/api'] = resolve(distDir, './runtime/api')
+    nuxt.options.alias['nuxt-server-fn/client'] = resolve(distDir, './runtime/client')
 
     const files: string[] = []
 

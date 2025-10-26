@@ -15,33 +15,24 @@
     "url": "https://github.com/antfu/nuxt-server-fn/issues"
   },
   "exports": {
-    ".": {
-      "types": "./dist/module.d.ts",
-      "import": "./dist/module.mjs",
-      "require": "./dist/module.cjs"
-    },
-    "./api": {
-      "types": "./dist/runtime/api.d.ts",
-      "import": "./dist/runtime/api.js"
-    },
-    "./client": {
-      "types": "./dist/runtime/client.d.ts",
-      "import": "./dist/runtime/client.js"
-    }
+    ".": "./dist/module.mjs",
+    "./api": "./dist/runtime/api.js",
+    "./client": "./dist/runtime/client.js"
   },
-  "main": "./dist/module.cjs",
-  "types": "./dist/types.d.ts",
+  "main": "./dist/module.mjs",
+  "types": "./dist/types.d.mts",
   "files": [
-    "*.d.ts",
     "dist"
   ],
   "scripts": {
     "prepublishOnly": "nr build",
     "build": "nuxt-module-build build",
-    "play": "nr build && nuxi dev playground",
+    "build:stub": "nuxt-module-build build --stub",
+    "play": "nuxt dev playground",
     "lint": "eslint .",
     "release": "bumpp && pnpm publish",
-    "prepare": "nuxi prepare playground"
+    "prepare": "nuxt-module-build prepare && nuxt prepare playground",
+    "prepack": "pnpm build"
   },
   "dependencies": {
     "@nuxt/kit": "^3.19.3",
@@ -54,7 +45,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "^6.0.0",
     "@antfu/ni": "^27.0.0",
-    "@nuxt/module-builder": "^0.8.4",
+    "@nuxt/module-builder": "^1.0.2",
     "@types/node": "^24.9.1",
     "bumpp": "^10.3.1",
     "eslint": "^9.38.0",
